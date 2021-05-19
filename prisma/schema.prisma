@@ -11,21 +11,28 @@ generator client {
 }
 
 model User {
-    id          Int         @id @default(autoincrement())
-    email       String      @unique
-    name        String
-    isSuperuser Boolean?    @default(false)
-    password    String
+   id          Int       @id @default(autoincrement())
+   name        String    @unique @db.VarChar(255)
+   isSuperUser Boolean?  @default(false)
+   password    String
+   messages    Message[]
+   groups      Group[]
 }
 
 model Group {
-    id              Int         @id @default(autoincrement())
-    name            String
-    dateCreated     DateTime    @default(now())
+   id          Int       @id @default(autoincrement())
+   name        String    @db.VarChar(255)
+   dateCreated DateTime? @default(now())
+   messages    Message[]
+   users       User[]
 }
 
 model Message {
-    id              Int         @id @default(autoincrement())
-    content         String      @db.VarChar(255)
-    dateCreated     DateTime    @default(now())
+   id          Int       @id @default(autoincrement())
+   content     String
+   dateCreated DateTime? @default(now())
+   user        User?     @relation(fields: [userId], references: [id])
+   userId      Int?
+   group       Group?    @relation(fields: [groupId], references: [id])
+   groupId     Int?
 }
