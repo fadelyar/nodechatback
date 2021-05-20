@@ -17,6 +17,8 @@ model User {
    password    String
    messages    Message[]
    groups      Group[]
+
+   @@map(name: "users")
 }
 
 model Group {
@@ -25,6 +27,8 @@ model Group {
    dateCreated DateTime? @default(now())
    messages    Message[]
    users       User[]
+
+   @@map(name: "groups")
 }
 
 model Message {
@@ -35,4 +39,6 @@ model Message {
    userId      Int?
    group       Group?    @relation(fields: [groupId], references: [id])
    groupId     Int?
+
+   @@map(name: "messages")
 }
