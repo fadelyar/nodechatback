@@ -3,22 +3,68 @@ const app = express();
 const server = require("http").createServer(app);
 const userRouter = require("./routes/user");
 const cors = require("cors");
-const io = require('socket.io')(server, {
+const jwt = require("jsonwebtoken");
+const {
+   join,
+   leave,
+   getGroupContent,
+   isLastUser,
+   createMessage,
+} = require("./chat/api");
+
+const io = require("socket.io")(server, {
    cors: {
-      origin: 'http://localhost:3000',
-      methods: ['GET', 'POST'],
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
       allowedHeaders: ["token"],
-      credentials: true
-   }
-})
+      credentials: true,
+   },
+});
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/user/", userRouter);
+io.use((socket, next) => {
+   const token = socket.handshake.auth.token;
+   jwt.verify(token, process.env.PRIVATE_KEY, {}, (err, decoded) => {
+      if (err) return next(new Error("there is an error with backend!"));
+      socket.user = decoded.name;
+      socket.id = socket.user;
+      next();
+   });
+});
 
-const PORT = process.env.PORT || 500;
+io.on("connection", async (socket) => {
+   socket.join(socket.handshake.query.room);
+   await join(socket.handshake.query.room, socket.user);
+   io.emit("groupContent", await getGroupContent(socket.handshake.query.room));
+   socket.on("sendMessage", async (message) => {
+      console.log("this is happened!");
+      const createdMessage = await createMessage(
+         message,
+         socket.handshake.query.room,
+         socket.user
+      );
+      // socket.emit("sendBack", createdMessage);
+      io.in(socket.handshake.query.room).emit("sendBack", createdMessage);
+   });
+
+   socket.on("disconnect", async () => {
+      socket.leave(socket.handshake.query.room);
+      await leave(socket.handshake.query.room, socket.user);
+      await isLastUser(socket.handshake.query.room);
+      io.emit(
+         "groupContent",
+         await getGroupContent(socket.handshake.query.room)
+      );
+      console.log("socket disconnected!", socket.id);
+   });
+});
+
+app.use("/user", userRouter);
+
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
    console.log("server is running on port 2000!");

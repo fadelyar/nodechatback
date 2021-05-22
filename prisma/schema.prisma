@@ -23,7 +23,7 @@ model User {
 
 model Group {
    id          Int       @id @default(autoincrement())
-   name        String    @db.VarChar(255)
+   name        String    @unique @db.VarChar(255)
    dateCreated DateTime? @default(now())
    messages    Message[]
    users       User[]
