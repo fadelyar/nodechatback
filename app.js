@@ -40,13 +40,11 @@ io.on("connection", async (socket) => {
    await join(socket.handshake.query.room, socket.user);
    io.emit("groupContent", await getGroupContent(socket.handshake.query.room));
    socket.on("sendMessage", async (message) => {
-      console.log("this is happened!");
       const createdMessage = await createMessage(
          message,
          socket.handshake.query.room,
          socket.user
       );
-      // socket.emit("sendBack", createdMessage);
       io.in(socket.handshake.query.room).emit("sendBack", createdMessage);
    });
 
@@ -58,7 +56,6 @@ io.on("connection", async (socket) => {
          "groupContent",
          await getGroupContent(socket.handshake.query.room)
       );
-      console.log("socket disconnected!", socket.id);
    });
 });
 
@@ -67,5 +64,4 @@ app.use("/user", userRouter);
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-   console.log("server is running on port 2000!");
 });
