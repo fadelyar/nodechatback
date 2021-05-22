@@ -14,7 +14,7 @@ const {
 
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "https://chatfrontend.vercel.app",
+		origin: "https://simple-chat-seven.vercel.app",
 		methods: ["GET", "POST"],
 		allowedHeaders: ["token"],
 		credentials: true,
