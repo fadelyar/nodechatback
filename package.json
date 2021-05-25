@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "prisma generate",
-    "dev": "PORT=3000 node src/index.js",
+    "dev": "PORT=3000 node app.js",
     "start": "node app.js"
   },
   "dependencies": {
