@@ -6,6 +6,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 constredis = require("redis");
 const fs = require('fs')
+const redis = require("redis");
 // 149.54.21.161/32
 fs.readFile("creds.json", "utf-8", function (err, data) {
    if (err) throw err;
