@@ -4,6 +4,43 @@ const server = require("http").createServer(app);
 const userRouter = require("./routes/user");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+constredis = require("redis");
+const fs = require('fs')
+// 149.54.21.161/32
+fs.readFile("creds.json", "utf-8", function (err, data) {
+   if (err) throw err;
+   creds = JSON.parse(data);
+   client = redis.createClient(
+      "redis://" +
+         creds.user +
+         ":" +
+         creds.password +
+         "@" +
+         creds.host +
+         ":" +
+         creds.port
+   );
+
+   // Redis Client Ready
+   client.once("ready", function () {
+      // Flush Redis DB
+      // client.flushdb();
+
+      // Initialize Chatters
+      client.get("chat_users", function (err, reply) {
+         if (reply) {
+            chatters = JSON.parse(reply);
+         }
+      });
+
+      // Initialize Messages
+      client.get("chat_app_messages", function (err, reply) {
+         if (reply) {
+            chat_messages = JSON.parse(reply);
+         }
+      });
+   });
+});
 const {
    join,
    leave,
@@ -67,4 +104,6 @@ app.use("/user", userRouter);
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {});
+server.listen(PORT, () => {
+   console.log("server is running on port 2000!");
+});
