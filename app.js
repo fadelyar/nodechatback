@@ -8,18 +8,40 @@ constredis = require("redis");
 const fs = require('fs')
 const redis = require("redis");
 // 149.54.21.161/32
+
+const {
+   join,
+   leave,
+   getGroupContent,
+   isLastUser,
+   createMessage,
+} = require("./chat/api");
+
+const io = require("socket.io")(server, {
+   cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["token"],
+      credentials: true,
+   },
+});
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 fs.readFile("creds.json", "utf-8", function (err, data) {
    if (err) throw err;
    creds = JSON.parse(data);
    client = redis.createClient(
       "redis://" +
-         creds.user +
-         ":" +
-         creds.password +
-         "@" +
-         creds.host +
-         ":" +
-         creds.port
+      creds.user +
+      ":" +
+      creds.password +
+      "@" +
+      creds.host +
+      ":" +
+      creds.port
    );
 
    // Redis Client Ready
@@ -42,26 +64,6 @@ fs.readFile("creds.json", "utf-8", function (err, data) {
       });
    });
 });
-const {
-   join,
-   leave,
-   getGroupContent,
-   isLastUser,
-   createMessage,
-} = require("./chat/api");
-
-const io = require("socket.io")(server, {
-   cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
-      allowedHeaders: ["token"],
-      credentials: true,
-   },
-});
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 io.use((socket, next) => {
    const token = socket.handshake.auth.token;
