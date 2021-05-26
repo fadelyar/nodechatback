@@ -6,30 +6,34 @@ const prisma = new PrismaClient()
 
 router.get('/getlast30messages/:room', async (req,
 															res) => {
-		const messages = await prisma.messages.findMany({
-			// take: 30,
-			where: {
-				group: {
-					name: {
-						equals: req.params.room
+		try {
+			const messages = await prisma.message.findMany({
+				// take: 30,
+				where: {
+					group: {
+						name: {
+							equals: req.params.room
+						}
 					}
-				}
-			},
-			// select: {
-			// 	content: true,
-			// 	dateCreated: true,
-			// 	user: {
-			// 		select: {
-			// 			name: true
-			// 		}
-			// 	}
-			// },
-			// orderBy: {
-			// 	dateCreated: 'asc',
-			// }
-		})
-		res.send(messages)
-	// return res.send('wow')
+				},
+				// select: {
+				// 	content: true,
+				// 	dateCreated: true,
+				// 	user: {
+				// 		select: {
+				// 			name: true
+				// 		}
+				// 	}
+				// },
+				// orderBy: {
+				// 	dateCreated: 'asc',
+				// }
+			})
+			res.send(messages)
+			// return res.send('wow')
+		}catch (e) {
+			res.send(e.message)
+		}
 	}
 )
 
