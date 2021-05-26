@@ -16,18 +16,18 @@ router.get('/getlast30messages/:room', async (req,
 						}
 					}
 				},
-				// select: {
-				// 	content: true,
-				// 	dateCreated: true,
-				// 	user: {
-				// 		select: {
-				// 			name: true
-				// 		}
-				// 	}
-				// },
-				// orderBy: {
-				// 	dateCreated: 'asc',
-				// }
+				select: {
+					content: true,
+					dateCreated: true,
+					user: {
+						select: {
+							name: true
+						}
+					}
+				},
+				orderBy: {
+					dateCreated: 'asc',
+				}
 			})
 			res.send(messages)
 			// return res.send('wow')
