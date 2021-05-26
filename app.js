@@ -61,7 +61,8 @@ io.on("connection", async (socket) => {
 	});
 });
 
-app.get("/", async (req, res) => {
+app.get("/", async (req,
+						  res) => {
 	res.send("hello faisal adelyar");
 });
 
