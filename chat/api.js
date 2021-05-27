@@ -98,6 +98,13 @@ const createMessage = async function (content, groupName, userName) {
             },
          },
       },
+      include: {
+         user: {
+            select: {
+               name: true,
+            },
+         },
+      },
    });
    return message;
 };
