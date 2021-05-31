@@ -57,7 +57,8 @@ io.on("connection", async (socket) => {
       );
       // io.in(socket.handshake.query.room).emit("sendBack", createdMessage);
 
-      io.to(socket.id).emit('sendPrivateMessageBack', createdMessage)
+      // io.to(socket.id).emit('sendPrivateMessageBack', createdMessage)
+      io.in(socket.handshake.query.room).emit('sendPrivateMessageBack', createdMessage)
    });
 
    socket.on("disconnect", async () => {
