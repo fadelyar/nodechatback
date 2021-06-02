@@ -60,6 +60,10 @@ io.on("connection", async (socket) => {
 			'sendBackPrivateMessage',
 			{message: createdMessage, receiver: data.receiver}
 		)
+		io.to(data.sender).emit(
+			'sendBackPrivateMessage',
+			{message: createdMessage, receiver: data.receiver}
+		)
 	});
 
 	socket.on("disconnect", async () => {
