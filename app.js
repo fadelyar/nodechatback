@@ -56,7 +56,7 @@ io.on("connection", async (socket) => {
 			socket.user
 		);
 
-		io.in(socket.handshake.query.room).emit(
+		io.to(data.receiver).emit(
 			'sendBackPrivateMessage',
 			{message: createdMessage, receiver: data.receiver}
 		)
