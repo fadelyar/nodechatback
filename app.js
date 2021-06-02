@@ -62,7 +62,7 @@ io.on("connection", async (socket) => {
 		)
 		io.to(data.sender).emit(
 			'sendBackPrivateMessage',
-			{message: createdMessage, receiver: data.sender}
+			{message: createdMessage, receiver: data.receiver}
 		)
 	});
 
