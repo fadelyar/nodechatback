@@ -12,6 +12,7 @@ const {
 	getGroupContent,
 	isLastUser,
 	createMessage,
+	createPrivateMessage
 } = require("./chat/api");
 
 const io = require("socket.io")(server, {
@@ -50,9 +51,8 @@ io.on("connection", async (socket) => {
 		io.in(socket.handshake.query.room).emit("sendBack", createdMessage);
 	});
 	socket.on("privateMessage", async (data) => {
-		const createdMessage = await createMessage(
+		const createdMessage = await createPrivateMessage(
 			data.message,
-			null,
 			socket.user
 		);
 

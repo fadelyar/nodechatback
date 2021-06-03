@@ -109,10 +109,32 @@ const createMessage = async function (content, groupName, userName) {
 	return message;
 };
 
+const createPrivateMessage = async function(content, userName) {
+   const message = await prisma.message.create({
+      data: {
+         content: content,
+         user: {
+            connect: {
+               name: userName,
+            },
+         },
+      },
+      include: {
+         user: {
+            select: {
+               name: true,
+            },
+         },
+      },
+   });
+   return message;
+}
+
 module.exports = {
 	join,
 	leave,
 	getGroupContent,
 	isLastUser,
 	createMessage,
+   createPrivateMessage
 };
