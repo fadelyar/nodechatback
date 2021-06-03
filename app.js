@@ -52,7 +52,7 @@ io.on("connection", async (socket) => {
 	socket.on("privateMessage", async (data) => {
 		const createdMessage = await createMessage(
 			data.message,
-			null,
+			socket.handshake.query.room,
 			socket.user
 		);
 
