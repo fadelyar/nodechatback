@@ -13,6 +13,12 @@ router.post("/login", async (req, res) => {
          where: {
             name: data.name,
          },
+         select: {
+            name: true,
+            isSuperUser: true,
+            id: true,
+            password: true,
+         },
       });
       if (!user)
          return res.status(400).send({ message: "user does not exist!" });
@@ -45,6 +51,11 @@ router.post("/register", async (req, res) => {
          name: data.name,
          isSuperUser: data.isSuperUser || false,
          password: hashPassword,
+      },
+      select: {
+         isSuperUser: true,
+         name: true,
+         id: true,
       },
    });
    jwt.sign(newUser, process.env.PRIVATE_KEY, {}, (err, token) => {
