@@ -12,6 +12,7 @@ generator client {
 
 model User {
    id          Int       @id @default(autoincrement())
+   profile     String    @default("")
    name        String    @unique @db.VarChar(255)
    isSuperUser Boolean?  @default(false)
    password    String
@@ -33,6 +34,7 @@ model Group {
 
 model Message {
    id          Int       @id @default(autoincrement())
+   type        String?   @default("text")
    content     String
    dateCreated DateTime? @default(now())
    user        User?     @relation(fields: [userId], references: [id])

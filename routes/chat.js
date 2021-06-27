@@ -17,6 +17,7 @@ router.get("/getlast30messages/:room", async (req, res) => {
 			select: {
 				content: true,
 				dateCreated: true,
+				type: true,
 				user: {
 					select: {
 						name: true,
@@ -27,8 +28,10 @@ router.get("/getlast30messages/:room", async (req, res) => {
 				dateCreated: "asc",
 			},
 		});
-		res.send(messages);
-		// return res.send('wow')
+		const filteredMessages = messages.map((message) => {
+			return {data: message}
+		})
+		res.send(filteredMessages);
 	} catch (e) {
 		res.send(e.message);
 	}

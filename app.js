@@ -44,25 +44,30 @@ io.on("connection", async (socket) => {
    io.emit("groupContent", await getGroupContent(socket.handshake.query.room));
    socket.on("sendMessage", async (message) => {
       const createdMessage = await createMessage(
-         message,
+         message.data,
+         message.type,
          socket.handshake.query.room,
          socket.user
       );
-      io.in(socket.handshake.query.room).emit("sendBack", createdMessage);
+      io.in(socket.handshake.query.room)
+         .emit("sendBack", { data: createdMessage});
    });
    socket.on("privateMessage", async (data) => {
       const createdMessage = await createPrivateMessage(
-         data.message,
-         socket.user
+         data.data.message,
+         socket.user,
+         data.type
       );
 
-      io.to(data.receiver).emit("sendBackPrivateMessage", {
+      console.log(createdMessage)
+
+      io.to(data.data.receiver).emit("sendBackPrivateMessage", {
          message: createdMessage,
-         receiver: data.sender,
+         receiver: data.data.sender,
       });
-      io.to(data.sender).emit("sendBackPrivateMessage", {
+      io.to(data.data.sender).emit("sendBackPrivateMessage", {
          message: createdMessage,
-         receiver: data.receiver,
+         receiver: data.data.receiver,
       });
    });
 
